@@ -43,7 +43,7 @@ router.post("/register", async (req, res) => {
             profileImage,
         })
 
-        await User.save();
+        await user.save();
 
         const token = generateToken(user._id);
         res.status(201).json({
@@ -63,7 +63,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     try {
-        const {email, password} = res.body;
+        const {email, password} = req.body;
         
         if (!email || !password) return res.status(400).json({message: "All fields are required"});
 
@@ -76,6 +76,7 @@ router.post("/login", async (req, res) => {
         if (!isPasswordCorrect) return res.status(400).json({message: "Invalid credentials"});
 
         //generate token
+        const token = generateToken(user._id);
         res.status(200).json({
             token,
             user: {
